@@ -1,0 +1,32 @@
+# Frequent words problem
+# Increment through each kmer of size k in a sequence and check 
+# the number of occurrences.  Record the kmer and number of occurrences 
+# in 2 lists with the same indexing.
+
+# define global variables
+import math
+
+# define functions
+
+# Algorithm for finding the number of occurences of a kmer
+# within a given sequence.
+def count_kmer(sequence, kmer):
+    occurences = 0
+    for i in range(len(sequence) - len(kmer) + 1):
+        if kmer == sequence[i: i + len(kmer)]:
+            occurences += 1
+    return occurences
+
+# Algorithms for finding the most common kmer in a sequence of size k
+def most_frequent_kmer(sequence, kmer_length):
+    kmer_frequencies = []
+    kmer_list = []
+    for i in range(len(sequence) - kmer_length + 1):
+            kmer = sequence[i : i + kmer_length]
+            kmer_list.append(kmer)
+            frequency = count_kmer(sequence,kmer)
+            kmer_frequencies.append(frequency)
+    return kmer_list[kmer_frequencies.index(max(kmer_frequencies))], kmer_frequencies, kmer_list
+
+
+print(most_frequent_kmer("acattcacacatttt", 3))
