@@ -1,0 +1,12 @@
+# Algorithm for finding the number of occurrences of a kmer
+# within a given sequence.
+
+def check_kmer(sequence, kmer):
+    occurences = 0
+    # iterate through kmers in sequence to count matches
+    for i in range(len(sequence) - len(kmer) + 1):
+        if kmer == sequence[i: i + len(kmer)]:
+            occurences += 1
+    return occurences
+
+print check_kmer("GCGCG", "GCG")
