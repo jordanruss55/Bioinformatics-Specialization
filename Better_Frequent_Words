@@ -2,33 +2,26 @@
 
 # Will increment through sequence and array each kmer into a
 # dictionary with its number of occurences 
+# Import packages
+from collections import defaultdict
 
-
-def array_kmer_frequencies(sequence, kmer_length):
-    kmer_frequency_dictionary = {}
-    for i in range(len(sequence) - kmer_length + 1):
-            kmer = sequence[i : i + kmer_length]
-            if kmer not in kmer_frequency_dictionary.keys():
-                kmer_frequency_dictionary[kmer] = 1
-            else:
-                kmer_frequency_dictionary[kmer] += 1
+# Takes a dna_sequence string, iterated through each subsequence of length = kmer_length using a generator expression
+# and populates a defaultdict with each unique kmer and its number of occurrences
+def array_kmer_frequencies(dna_sequence: str, kmer_length: int) -> dict:
+    kmer_frequency_dictionary = defaultdict(int)
+    for kmer in (dna_sequence[i: i + kmer_length] for i in range(len(dna_sequence) - kmer_length + 1)):
+        kmer_frequency_dictionary[kmer] += 1
     return kmer_frequency_dictionary
 
-# Will identify and return the maximum value within the dictionary
-def max_map(dictionary):
-    return max(dictionary.values(), default = None) 
+# Will iterate through the frequency dictionary using a generator comprehension and return those keys (kmers) whose
+# value (occurrences) is equal to the maximum number of occurrences within the frequency dictionary
+def max_kmers(dna_sequence: str, kmer_length: int) -> dict:
+    frequency_array = array_kmer_frequencies(dna_sequence, kmer_length)
+    max_frequency = max(frequency_array.values())
+    print(frequency_array.items())
+    frequent_kmers = [x for x in (item[0] for item in frequency_array.items() if item[1] == max_frequency)]
+    return f"The kmers {frequent_kmers} of length {kmer_length} appear {max_frequency} times."
 
-# Will increment through the frequency dictionary and pull
-# those keys that match to the max value
-def max_kmers(sequence, kmer_length):
-    frequent_kmers = []
-    frequency_array = array_kmer_frequencies(sequence, kmer_length)
-    max = max_map(frequency_array)
-    for kmer in frequency_array.keys():
-        if frequency_array[kmer] == max:
-            frequent_kmers.append(kmer)
-    return "The kmers" + str(frequent_kmers) + " of length " + str(kmer_length) + " appear " + str(max) + " times."
-           
-sequence = "ACTACTACTCATC" 
+sequence = "ACTACTACTCATC"
 kmer_length = 5
-print max_kmers(sequence, kmer_length)
+print(max_kmers(sequence, kmer_length))
