@@ -1,0 +1,20 @@
+
+
+# Takes a dna_sequence string, iterated through each subsequence of length = kmer_length using a generator expression
+# and populates a defaultdict with each kmer and its number of occurrences. A list is returned of all keys (kmers)
+# whose value (occurrences) is equal to the maximum number of occurrences within the frequency dictionary.
+
+from collections import defaultdict
+
+def max_kmers(dna_sequence: str, kmer_length: int) -> dict:
+    frequency_array = defaultdict(int)
+    for kmer in (dna_sequence[i: i + kmer_length] for i in range(len(dna_sequence) - kmer_length + 1)):
+        frequency_array[kmer] += 1
+    max_frequency = max(frequency_array.values())
+    print(frequency_array.items())
+    frequent_kmers = [x for x in (item[0] for item in frequency_array.items() if item[1] == max_frequency)]
+    return frequent_kmers
+
+sequence = "ACTACTACTCATC"
+kmer_length = 5
+print(max_kmers(sequence, kmer_length))
