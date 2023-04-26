@@ -1,0 +1,34 @@
+# Better Frequent Words Problem
+
+# Will increment through sequence and array each kmer into a
+# dictionary with its number of occurences 
+
+
+def array_kmer_frequencies(sequence, kmer_length):
+    kmer_frequency_dictionary = {}
+    for i in range(len(sequence) - kmer_length + 1):
+            kmer = sequence[i : i + kmer_length]
+            if kmer not in kmer_frequency_dictionary.keys():
+                kmer_frequency_dictionary[kmer] = 1
+            else:
+                kmer_frequency_dictionary[kmer] += 1
+    return kmer_frequency_dictionary
+
+# Will identify and return the maximum value within the dictionary
+def max_map(dictionary):
+    return max(dictionary.values(), default = None) 
+
+# Will increment through the frequency dictionary and pull
+# those keys that match to the max value
+def max_kmers(sequence, kmer_length):
+    frequent_kmers = []
+    frequency_array = array_kmer_frequencies(sequence, kmer_length)
+    max = max_map(frequency_array)
+    for kmer in frequency_array.keys():
+        if frequency_array[kmer] == max:
+            frequent_kmers.append(kmer)
+    return "The kmers" + str(frequent_kmers) + " of length " + str(kmer_length) + " appear " + str(max) + " times."
+           
+sequence = "ACTACTACTCATC" 
+kmer_length = 5
+print max_kmers(sequence, kmer_length)
