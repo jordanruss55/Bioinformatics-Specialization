@@ -1,0 +1,10 @@
+# Will convert a DNA string to its reverse complement
+
+def reverse_complement(sequence):
+    # Make translation table
+    bp_dict = str.maketrans('ATCG','TAGC')
+    # Translate sequence using tranlation table bp_dict
+    reverse_complement = sequence.translate(bp_dict)[::-1]
+    return reverse_complement
+
+print(reverse_complement('ATCG'))
