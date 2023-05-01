@@ -1,7 +1,7 @@
 # Better Frequent Words Problem
 
-# Will increment through sequence and array each kmer into a
-# dictionary with its number of occurences 
+# Will increment through sequence and array each kmer into a dictionary with its number of occurences 
+
 # Import packages
 from collections import defaultdict
 
