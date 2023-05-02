@@ -1,0 +1,15 @@
+# Generates and returns a list of indexes where skew is minimized based on each bp from sequence
+
+import itertools
+
+def sequence_min_skew_index(sequence):
+    base_value = {'A': 0, 'T': 0, 'G': 1, 'C': -1}
+    value_by_bp = [base_value[i] for i in sequence]
+    skew = list(itertools.accumulate(value_by_bp))
+    min_skew = min(skew)
+    min_skew_index = [i for i in range(len(skew)) if skew[i] == min_skew]
+    return min_skew_index
+
+# Test
+sequence1 = 'AAATTTGGGCCC'
+print(sequence_min_skew_index(sequence1))
