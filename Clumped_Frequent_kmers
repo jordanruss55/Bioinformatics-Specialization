@@ -1,0 +1,21 @@
+from collections import defaultdict
+
+# Takes a dna_sequence string, iterated through each subsequence of length = kmer_length using a generator expression
+# and populates a defaultdict with each unique kmer and its number of occurrences
+def array_kmer_frequencies(dna_sequence: str, kmer_length: int) -> dict:
+    kmer_frequency_dictionary = defaultdict(int)
+    for kmer in (dna_sequence[i: i + kmer_length] for i in range(len(dna_sequence) - kmer_length + 1)):
+        kmer_frequency_dictionary[kmer] += 1
+    return kmer_frequency_dictionary
+
+# Increment through windows of size window in Sequence, feed current_window to array_kmer_frequencies, increment through
+# current_window and record all kmers k long that occur a minimum number of t times
+def find_clumped_kmers(Sequence, k, window, t):
+    frequent_clumped_kmers = set()
+    for i in range(len(Sequence) - window):
+        current_window = Sequence[i:i + window]
+        frequency_array = array_kmer_frequencies(current_window,k)
+        frequent_clumped_kmers.update([x for x in (item[0] for item in frequency_array.items() if item[1] >= t)])
+    return frequent_clumped_kmers
+
+print(find_clumped_kmers('CGGACTCGACAGATGTGAAGAACGACAATGTGAAGACTCGACACGACAGAGTGAAGAGAAGAGGAAACATTGTAA', 5,50,4))
