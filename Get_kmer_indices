@@ -1,0 +1,11 @@
+# Returns a list of all indices where the given kmer matches the larger sequence
+
+# define functions
+def get_kmer_indices(kmer, sequence):
+    indices = [i for i in range(len(sequence)-len(kmer) + 1) if sequence[i : i + len(kmer)] == kmer]
+    return indices
+
+# Test
+sequence1 = 'GACGATATACGACGATA'
+kmer = 'ATA'
+print(get_kmer_indices(kmer,sequence1))
