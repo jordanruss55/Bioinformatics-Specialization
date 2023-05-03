@@ -1,0 +1,69 @@
+# Will iterate through a sequence to find where there are kmers that match the provided template within an allowed number of mismatches
+
+# Import packages
+from collections import defaultdict
+from collections import Counter
+
+# Takes a kmer and a mismatch tolerance and returns the number of occurrences
+def mismatched_kmer_count(kmer, sequence, mismatches):
+    count = 0
+    for i in range(len(sequence) - len(kmer) + 1):
+        if hamming_distance(kmer, sequence[i: i + len(kmer)]) <= mismatches:
+            count += 1
+    return count
+
+# Compared the ith bp of two sequences to find and count mismatches
+def hamming_distance(sequence_1, sequence_2):
+    mismatch_count = sum(1 for a, b in zip(sequence_1, sequence_2) if a != b)
+    return mismatch_count
+
+# Recursively builds a set of pattern variants with at most d mismatches
+def pattern_neighborhood(pattern, d):
+    neighborhood = set()
+    nucleotides = ['A', 'T', 'C', 'G']
+
+    if d == 0:
+        return set(kmer)
+
+    # Terminal conditional statements
+    if len(pattern) == 1:
+        return set(nucleotides)
+
+    # Branch off of pattern into pattern[1:]
+    sub_pattern_neighborhood = pattern_neighborhood(pattern[1:], d)
+
+    # Extend sub_patterns by each nucleotide if the hamming distance of the sub-pattern is less than distance d
+    for sub_pattern in sub_pattern_neighborhood:
+        # checks to see if the new sub_pattern will have too many mismatches
+        if hamming_distance(pattern[1:], sub_pattern) < d:
+            neighborhood.update([n + sub_pattern for n in nucleotides])
+        else:
+            neighborhood.add(pattern[0] + sub_pattern)
+    return neighborhood
+
+# Takes a dna_sequence string, iterated through each subsequence of length = kmer_length using a generator expression
+# and populates a defaultdict with each unique kmer and its number of occurrences
+def array_mismatched_kmer_frequencies(dna_sequence: str, kmer_length: int, d: int) -> dict:
+    kmer_frequencies = Counter()
+    sequence_kmers = (dna_sequence[i: i + kmer_length] for i in range(len(dna_sequence) - kmer_length + 1))
+    for neighborly_kmers in (pattern_neighborhood(kmer, d) for kmer in sequence_kmers):
+        for neighbor in neighborly_kmers:
+            kmer_frequencies[neighbor] = 0
+    for sequence_kmer in (dna_sequence[i: i + kmer_length] for i in range(len(dna_sequence) - kmer_length + 1)):
+        for key in kmer_frequencies.keys():
+            if hamming_distance(key, sequence_kmer) <= d:
+                kmer_frequencies[key] += 1
+    return dict(kmer_frequencies)
+
+# Will iterate through the frequency dictionary using a generator comprehension and return those keys (kmers) whose
+# value (occurrences) is equal to the maximum number of occurrences within the frequency dictionary
+def max_kmers_with_mismatch(dna_sequence: str, kmer_length: int, d: int) -> dict:
+    frequency_array = array_mismatched_kmer_frequencies(dna_sequence, kmer_length, d)
+    print(frequency_array)
+    max_frequency = max(frequency_array.values())
+    frequent_kmers = [x for x in (item[0] for item in frequency_array.items() if item[1] == max_frequency)]
+    return f"The kmers {frequent_kmers} of length {kmer_length} appear {max_frequency} times."
+
+# Testing
+pattern = 'AACAAGCTGATAAACATTTAAAGAG'
+print(max_kmers_with_mismatch(pattern, 5, 1))
