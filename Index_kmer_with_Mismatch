@@ -1,0 +1,14 @@
+# Compared the ith bp of two sequences to find and count mismatches
+def hamming_distance(sequence_1, sequence_2):
+    mismatch_count = sum(1 for a, b in zip(sequence_1, sequence_2) if a != b)
+    return mismatch_count
+
+# Will iterate through a sequence to find where there are kmers that match the provided template within an allowed number of mismatches
+def kmer_positions(kmer, sequence, mismatch):
+    positions = [i for i in range(len(sequence)-len(kmer) + 1) if hamming_distance(kmer, sequence[i : i + len(kmer)]) <= mismatch]
+    return positions
+
+# Test
+sequence1 = 'CGCCCGAATCCAGAACGCATTCCCATATTTCGGGACCACTGGCCTCCACGGTACGGACGTCAATCAAAT'
+kmer = 'ATTCTGGA'
+print(kmer_positions(kmer,sequence1,3))
