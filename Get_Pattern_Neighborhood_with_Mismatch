@@ -1,0 +1,25 @@
+# Recursively builds a set of pattern variants with at most d mismatches
+def pattern_neighborhood(pattern, d):
+    neighborhood = set()
+    nucleotides = ['A', 'T', 'C', 'G']
+
+    if d == 0:
+        return set(kmer)
+
+    # Terminal conditional statements
+    if len(pattern) == 1:
+        return set(nucleotides)
+
+    # Branch off of pattern into pattern[1:]
+    sub_pattern_neighborhood = pattern_neighborhood(pattern[1:], d)
+
+    # Extend sub_patterns by each nucleotide if the hamming distance of the sub-pattern is less than distance d
+    for sub_pattern in sub_pattern_neighborhood:
+        # checks to see if the new sub_pattern will have too many mismatches
+        if hamming_distance(pattern[1:], sub_pattern) < d:
+            neighborhood.update([n + sub_pattern for n in nucleotides])
+        else:
+            neighborhood.add(pattern[0] + sub_pattern)
+    return neighborhood
+
+print(pattern_neighborhood('AAAA', 2))
